@@ -1734,11 +1734,14 @@ void shiftImDispLinear_(Mat& srcim, Mat& srcdisp, Mat& destim, Mat& destdisp, do
 	}	
 }
 
+Mat tmp_mask4 = Mat();
 //input mask should be set to 0
 template <class T>
-void shiftImDisp(Mat& srcim, Mat& srcdisp, Mat& destim, Mat& destdisp, double amp,double sub_gap,const int large_jump = 3 ,Mat& mask=Mat(), int warpInterpolationMethod=INTER_CUBIC)
+void shiftImDisp(Mat& srcim, Mat& srcdisp, Mat& destim, Mat& destdisp, double amp,double sub_gap,const int large_jump = 3,
+                    Mat& mask=tmp_mask4, int warpInterpolationMethod=INTER_CUBIC)
 {
-	Mat mask_=mask;
+	
+    Mat mask_=mask;
 	if(mask_.empty())mask_=Mat::zeros(srcim.size(),CV_8U);
 
 	if(srcdisp.type()==CV_8U)
@@ -1786,7 +1789,9 @@ void shiftImDisp(Mat& srcim, Mat& srcdisp, Mat& destim, Mat& destdisp, double am
 	mask_.copyTo(mask);
 }
 
-void shiftDisp(const Mat& srcdisp, Mat& destdisp, float amp,float sub_gap,const int large_jump = 3 ,Mat& mask=Mat())
+Mat tmp_mask2 = Mat();
+//void shiftDisp(const Mat& srcdisp, Mat& destdisp, float amp,float sub_gap,const int large_jump = 3 ,Mat& mask=Mat())
+void shiftDisp(const Mat& srcdisp, Mat& destdisp, float amp,float sub_gap,const int large_jump = 3 ,Mat& mask=tmp_mask2)
 {
 	if(srcdisp.depth()==CV_8U)
 	{
@@ -3492,8 +3497,9 @@ void blendLRRes(Mat& iml, Mat& imr, Mat& dispL, Mat& dispR ,Mat& dest, Mat& dest
 		Mat ldref=dispL.clone();
 		Mat rref=imr.clone();
 		Mat rdref=dispR.clone();
-		fillOcclusionImDisp(lref,ldref);
-		fillOcclusionImDisp(rref,rdref);
+		fillOcclusionImDisp(lref,ldref,0,0);
+		fillOcclusionImDisp(rref,rdref,0,0);
+
 		for(int i=-10;i<=10;i++)
 		{
 			double move = i*0.05;
@@ -4656,17 +4662,18 @@ void StereoViewSynthesis::viewsynth(const Mat& srcL, const Mat& srcR, const Mat&
 		CalcTime t("warp");
 #endif
 		shiftDisp(dispL,temp,alpha/disp_amp,sub_gap,(int)(large_jump*disp_amp));
-		depthfilter(temp,destdisp,Mat(),cvRound(abs(alpha)),disp_amp);
-		shiftImInv(srcL,destdisp,dest,(float)(-alpha/disp_amp),0,warpInterpolationMethod); 
-
-
+        Mat tmp_mat = Mat();
+		//depthfilter(temp,destdisp,Mat(),cvRound(abs(alpha)),disp_amp);
+		depthfilter(temp,destdisp,tmp_mat,cvRound(abs(alpha)),disp_amp);
+		shiftImInv(srcL,destdisp,dest,(float)(-alpha/disp_amp),0,warpInterpolationMethod);
 		{
 			//	CalcTime t("shift");
 			shiftDisp(dispR,temp,(alpha-1.0)/disp_amp,sub_gap,(int)(large_jump*disp_amp));
 		}
 		{
 			//	CalcTime t("filter");
-			depthfilter(temp,destdispR,Mat(),cvRound(abs(alpha)),disp_amp);		
+            Mat tmp_mat2 = Mat();
+			depthfilter(temp,destdispR,tmp_mat2,cvRound(abs(alpha)),disp_amp);
 		}
 		{
 			//CalcTime t("inter");
@@ -4959,7 +4966,8 @@ void StereoViewSynthesis::viewsynthSingleAlphaMap(Mat& src,Mat& disp, Mat& dest,
 	Mat zero_=Mat::zeros(src.size(),CV_8U);
 
 	shiftDisp(disp,temp,(float)(alpha/disp_amp),sub_gap,(int)(large_jump*disp_amp));
-	depthfilter(temp,destdisp,Mat(),cvRound(abs(alpha)),disp_amp);
+	Mat tmp_mat3 = Mat();
+    depthfilter(temp,destdisp,tmp_mat3,cvRound(abs(alpha)),disp_amp);
 	//shiftImInv_<T>(src,destdisp,dest,(float)(-alpha/disp_amp),0,warpInterpolationMethod); 
 	shiftImInv(src,destdisp,dest,(float)(-alpha/disp_amp),0,INTER_NEAREST); 
 

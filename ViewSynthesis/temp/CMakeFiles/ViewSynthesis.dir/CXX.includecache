@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/jc/git/ViewSynthesis/ViewSynthesis/ViewSynthesis.cpp
+viewsynth.h
+/home/jc/git/ViewSynthesis/ViewSynthesis/viewsynth.h
+
+/home/jc/git/ViewSynthesis/ViewSynthesis/viewsynth.h
+opencv2/opencv.hpp
+-
+

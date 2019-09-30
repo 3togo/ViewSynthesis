@@ -1,0 +1,3 @@
+/home/jc/git/ViewSynthesis/ViewSynthesis/temp/CMakeFiles/rebuild_cache.dir
+/home/jc/git/ViewSynthesis/ViewSynthesis/temp/CMakeFiles/ViewSynthesis.dir
+/home/jc/git/ViewSynthesis/ViewSynthesis/temp/CMakeFiles/edit_cache.dir

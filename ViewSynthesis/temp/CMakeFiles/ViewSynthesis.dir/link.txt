@@ -1,1 +1,0 @@
-/usr/bin/c++   -std=c++11 -O3 -DNDEBUG  -rdynamic CMakeFiles/ViewSynthesis.dir/filter.cpp.o CMakeFiles/ViewSynthesis.dir/guidedFilter.cpp.o CMakeFiles/ViewSynthesis.dir/main.cpp.o CMakeFiles/ViewSynthesis.dir/util.cpp.o CMakeFiles/ViewSynthesis.dir/ViewSynthesis.cpp.o  -o ViewSynthesis 
